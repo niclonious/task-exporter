@@ -1,0 +1,55 @@
+openapi: 3.0.4
+info:
+  title: "Task Exporter API"
+  version: 0.0.1
+paths:
+  /api/tasks:
+    post:
+      summary: "Add a new Task"
+      operationId: addTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid JSON
+  /metrics:
+    get:
+      summary: "Get prometheus metrics"
+      operationId: getPrometheusMetrics
+      responses:
+        "200":
+          description: OK
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        tool:
+          type: string
+        task:
+          type: string
+        status:
+          type: string
+          enum:
+            - "completed"
+            - "failed"
+            - "succeeded"
+        duration:
+          type: integer
+      required:
+        - tool
+        - task
+        - status
+        - duration
+      example:
+        tool: "upgrader"
+        task: "healthchecks"
+        status: "completed"
+        duration: 120
