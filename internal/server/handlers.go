@@ -1,23 +1,44 @@
-package app
+package server
 
 import (
 	"net/http"
-	"task-exporter/internal/api"
+	"slices"
 	"task-exporter/internal/prom"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+const (
+	metricName = "task_duration"
+)
+
 type Server struct {
 	prometheus prom.PrometheusServer
+}
+
+func NewServer() *Server {
+	server := &Server{}
+	server.prometheus = *prom.NewPrometheusServer()
+	server.prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: metricName,
+			Help: "A gauge of task execution durations in seconds.",
+		},
+		[]string{
+			"tool",
+			"task",
+			"status",
+		},
+	)
+	return server
 }
 
 // Add a new Task
 // (POST /api/tasks)
 func (a *Server) AddTask(c *gin.Context) {
-	var task api.AddTaskJSONRequestBody
-	if err := c.ShouldBindJSON(&task); err != nil || !api.ValidateTask(task) {
+	var task AddTaskJSONRequestBody
+	if err := c.ShouldBindJSON(&task); err != nil || !ValidateTask(task) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
 	}
@@ -34,4 +55,8 @@ func (a *Server) AddTask(c *gin.Context) {
 // (GET /metrics)
 func (a *Server) GetPrometheusMetrics(c *gin.Context) {
 	a.prometheus.Handler(c)
+}
+
+func ValidateTask(task Task) bool {
+	return slices.Contains([]TaskStatus{Completed, Failed, Succeeded}, task.Status)
 }

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"task-exporter/internal/app"
+	"task-exporter/internal/api"
 )
 
 func main() {
-	app, err := app.New()
+	api, err := api.New()
 	if err != nil {
 		panic(1)
 	}
-	app.Run()
+	api.Run()
 }
