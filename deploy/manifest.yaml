@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-exporter
+  labels:
+    app: task-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-exporter
+  template:
+    metadata:
+      labels:
+        app: task-exporter
+    spec:
+      containers:
+        - name: task-exporter
+          image: task-exporter:0.0.1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TASK_EX_PORT
+              value: "8080"
+            - name: TASK_EX_ENV
+              value: "prod"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-exporter
+spec:
+  selector:
+    app: task-exporter
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
