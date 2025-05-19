@@ -1,0 +1,14 @@
+services:
+  task-exporter:
+    image: task-exporter:0.0.1
+    container_name: task-exporter
+    ports:
+      - "8080:8080"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - /tmp/prometheus.yml:/etc/prometheus/prometheus.yml:ro
