@@ -57,3 +57,49 @@ func TestServer_AddTask(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateTask(t *testing.T) {
+	tests := []struct {
+		name string
+		task Task
+		want bool
+	}{
+		{
+			name: "Shoud_Succeed",
+			task: Task{
+				Duration: 120,
+				Status:   "completed",
+				Task:     "healthchecks",
+				Tool:     "upgrader",
+			},
+			want: true,
+		},
+		{
+			name: "Shoud_Fail_Wrong_Status",
+			task: Task{
+				Duration: 120,
+				Status:   "stopping",
+				Task:     "healthchecks",
+				Tool:     "upgrader",
+			},
+			want: false,
+		},
+		{
+			name: "Shoud_Fail_Negative_Duration",
+			task: Task{
+				Duration: -20,
+				Status:   "completed",
+				Task:     "healthchecks",
+				Tool:     "upgrader",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := validateTask(tt.task); got != tt.want {
+				t.Errorf("ValidateTask() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
