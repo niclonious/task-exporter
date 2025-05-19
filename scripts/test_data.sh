@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script generates random tasks and sends them to $ADDRESS each second.
+# This script generates random tasks and sends them to $ADDRESS each 2 seconds.
 ADDRESS="http://localhost:8080/api/tasks"
 TOOLS=("upgrader" "downgrader" "watcher" "listener" "system-monitor")
 TASKS=("healthchecks" "upgrade" "rollback" "backup" "restore")
@@ -15,5 +15,5 @@ while [ 1 ]; do
     curl --header "Content-Type: application/json" --request "POST" --data "$PAYLOAD" \
         $ADDRESS
     echo ""
-    sleep 1
+    sleep 2
 done
