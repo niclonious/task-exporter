@@ -18,6 +18,7 @@ const (
 	EnvProd = "prod"
 )
 
+// LoadConfig loads configuration from config.env file at path and from environment
 func LoadConfig(path string) (Config, error) {
 	viper.SetConfigFile(path + "/config.env")
 	viper.AutomaticEnv()
@@ -36,6 +37,7 @@ func LoadConfig(path string) (Config, error) {
 	return config, nil
 }
 
+// validateConfig validates configuration values
 func validateConfig(conf Config) (err error) {
 	if conf.Port < 1024 || conf.Port > 65535 {
 		err = errors.Join(err, fmt.Errorf("TASK_EX_PORT should be between 1024 and 65535, got %d", conf.Port))

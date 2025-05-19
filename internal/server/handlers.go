@@ -17,6 +17,7 @@ type Server struct {
 	prometheus prom.PrometheusServer
 }
 
+// NewServer initialises a Server structure that implements api.ServerInterface
 func NewServer() *Server {
 	server := &Server{}
 	server.prometheus = *prom.NewPrometheusServer()
@@ -34,11 +35,10 @@ func NewServer() *Server {
 	return server
 }
 
-// Add a new Task
-// (POST /api/tasks)
+// AddTask - handler for (POST /api/tasks)
 func (a *Server) AddTask(c *gin.Context) {
 	var task AddTaskJSONRequestBody
-	if err := c.ShouldBindJSON(&task); err != nil || !ValidateTask(task) {
+	if err := c.ShouldBindJSON(&task); err != nil || !validateTask(task) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
 	}
@@ -51,12 +51,12 @@ func (a *Server) AddTask(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Created"})
 }
 
-// Get prometheus metrics
-// (GET /metrics)
+// GetPrometheusMetrics - handler for (GET /metrics)
 func (a *Server) GetPrometheusMetrics(c *gin.Context) {
 	a.prometheus.Handler(c)
 }
 
-func ValidateTask(task Task) bool {
-	return slices.Contains([]TaskStatus{Completed, Failed, Succeeded}, task.Status)
+// ValidateTask validates incoming task data
+func validateTask(task Task) bool {
+	return slices.Contains([]TaskStatus{Completed, Failed, Succeeded}, task.Status) && task.Duration > 0
 }

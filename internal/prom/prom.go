@@ -12,6 +12,7 @@ type PrometheusServer struct {
 	GaugeVecs map[string]*prometheus.GaugeVec
 }
 
+// NewPrometheusServer creates a new instance of PrometheusServer struct that has prometheus registry, Gin-style handler and a map with GaugeVecs
 func NewPrometheusServer() *PrometheusServer {
 	promServer := &PrometheusServer{}
 	promServer.Registry = prometheus.NewRegistry()
