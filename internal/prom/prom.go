@@ -15,7 +15,7 @@ type PrometheusServer struct {
 func NewPrometheusServer() *PrometheusServer {
 	promServer := &PrometheusServer{}
 	promServer.Registry = prometheus.NewRegistry()
-	promServer.Handler = ginHTTPHandler(promServer.Registry)
+	promServer.Handler = gin.WrapH(promhttp.HandlerFor(promServer.Registry, promhttp.HandlerOpts{}))
 	promServer.GaugeVecs = map[string]*prometheus.GaugeVec{}
 
 	return promServer
@@ -27,10 +27,4 @@ func (ps *PrometheusServer) NewGaugeVec(opts prometheus.GaugeOpts, labels []stri
 	ps.Registry.MustRegister(gaugevec)
 	ps.GaugeVecs[opts.Name] = gaugevec
 	return gaugevec
-}
-
-// Returns Gin-wrapped HTTP handler
-func ginHTTPHandler(pregistry *prometheus.Registry) gin.HandlerFunc {
-	h := promhttp.HandlerFor(pregistry, promhttp.HandlerOpts{})
-	return gin.WrapH(h)
 }
