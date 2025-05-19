@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script generates random tasks and sends them to $ADDRESS each second.
 ADDRESS="http://localhost:8080/api/tasks"
 TOOLS=("upgrader" "downgrader" "watcher" "listener" "system-monitor")
 TASKS=("healthchecks" "upgrade" "rollback" "backup" "restore")
