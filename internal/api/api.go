@@ -18,7 +18,7 @@ type API struct {
 func New() (api *API, err error) {
 	api = &API{}
 	server := server.NewServer()
-	api.config, err = config.LoadConfig("./")
+	api.config, err = config.LoadConfig("./") //TODO make it configurable via app arguments
 	if err != nil {
 		slog.Error("Failed to read config", slog.String("error", err.Error()))
 		return nil, err
