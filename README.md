@@ -2,9 +2,8 @@
 Receives task statuses and their duration from different external tools.
 
 ## Prerequisites
-You need to have `go v1.24.2` or higher installed in order to build or run this app.
-
-You also need to have `docker` in order to build and run the Docker image locally.
+- You need to have `go v1.24.2` or higher installed in order to build or run this app.
+- You also need to have `docker` in order to build and run the Docker image locally.
 
 ## Build
 To build the task-exporter locally, run:
