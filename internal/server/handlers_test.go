@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"net/http"
 	"net/http/httptest"
-	"task-exporter/internal/prom"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -55,30 +54,6 @@ func TestServer_AddTask(t *testing.T) {
 			router.ServeHTTP(w, req)
 			assert.Equal(t, tt.expectedStatus, w.Code)
 			assert.JSONEq(t, tt.expectedResponse, w.Body.String())
-		})
-	}
-}
-
-func TestServer_GetPrometheusMetrics(t *testing.T) {
-	type fields struct {
-		prometheus prom.PrometheusServer
-	}
-	type args struct {
-		c *gin.Context
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &Server{
-				prometheus: tt.fields.prometheus,
-			}
-			a.GetPrometheusMetrics(tt.args.c)
 		})
 	}
 }
