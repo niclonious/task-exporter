@@ -18,7 +18,7 @@ spec:
       containers:
         - name: task-exporter
           image: task-exporter:0.0.1
-          imagePullPolicy: Never
+          # imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env:
